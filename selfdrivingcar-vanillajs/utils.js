@@ -47,3 +47,8 @@ function polysIntersect(poly1, poly2){
     }
     return false;
 }
+
+
+function getXBestCars(cars, X){
+   return cars.sort((a, b) => a.brain.highscore - b.brain.highscore ).reverse().slice(0, X);
+}

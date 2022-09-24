@@ -29,3 +29,9 @@ button {
     flex-direction: column;
     justify-content: center;
 }
+
+#sidebar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}

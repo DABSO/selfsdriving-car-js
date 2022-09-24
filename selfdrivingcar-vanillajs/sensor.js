@@ -2,9 +2,14 @@ class Sensor{
 
     constructor(car){
         this.car = car;
-        this.rayCount = 25;
+        this.forwardRayCount = 20;
+        this.rightRayCount = 3;
+        this.leftRayCount = 3 ;
+        this.backwardRayCount = 3;
+
+        this.rayCount = this.forwardRayCount+ this.leftRayCount +this.rightRayCount + this.backwardRayCount;
         this.rayLength = 250;
-        this.raySpread = 1.75 * Math.PI
+        this.raySpread = 0.5 * Math.PI; 
         this.rays=[];
         this.readings = [];
     }
@@ -12,13 +17,84 @@ class Sensor{
     update(roadBorders, traffic){
           this.#castRays();
           this.readings = [];
-          for(let i = 0; i < this.rays.length; i++){
+          for(let i = 0; i < this.rayCount; i++){
             this.readings.push(
                 this.#getReading(this.rays[i], roadBorders, traffic)
             )
           }
-          
+    }
+    
+    #castRays(){
+        this.rays = [];
+        for(let i = 0; i < this.forwardRayCount; i++){
+            const rayAngle = lerp(
+                this.raySpread/2,
+                -this.raySpread/2,
+                this.forwardRayCount== 1 ? 0.5 : (i)/((this.forwardRayCount-1))
+            )+ this.car.angle;
+            
+        const start = {x: this.car.x, y: this.car.y};
+        const end = {
+            x: this.car.x -
+            Math.sin(rayAngle)*this.rayLength,
+            y: this.car.y-
+            Math.cos(rayAngle)*this.rayLength
+        };
 
+        this.rays.push([start, end]);
+        }  
+
+        for(let i = 0; i < this.backwardRayCount; i++){
+            const rayAngle = lerp(
+                this.raySpread/2,
+                -this.raySpread/2,
+                this.backwardRayCount== 1 ? 0.5 : (i)/((this.backwardRayCount-1))
+            )+Math.PI+ this.car.angle;
+            
+        const start = {x: this.car.x, y: this.car.y};
+        const end = {
+            x: this.car.x -
+            Math.sin(rayAngle)*this.rayLength,
+            y: this.car.y-
+            Math.cos(rayAngle)*this.rayLength
+        };
+
+        this.rays.push([start, end]);
+        }
+
+        for(let i = 0; i < this.leftRayCount; i++){
+            const rayAngle = lerp(
+                this.raySpread/2,
+                -this.raySpread/2,
+                this.leftRayCount== 1 ? 0.5 : (i)/((this.leftRayCount-1))
+            )+ (Math.PI * 0.5)+ this.car.angle;
+            
+        const start = {x: this.car.x, y: this.car.y};
+        const end = {
+            x: this.car.x - Math.sin(rayAngle)*this.rayLength,
+            y: this.car.y-Math.cos(rayAngle)*this.rayLength
+        };
+        
+        this.rays.push([start, end]);
+        }
+
+        for(let i = 0; i < this.rightRayCount; i++){
+            const rayAngle = lerp(
+                this.raySpread/2,
+                -this.raySpread/2,
+                this.rightRayCount== 1 ? 0.5 : (i)/((this.rightRayCount-1))
+            )+Math.PI * 1.5+ this.car.angle;
+            
+        const start = {x: this.car.x, y: this.car.y};
+        const end = {
+            x: this.car.x -
+            Math.sin(rayAngle)*this.rayLength,
+            y: this.car.y-
+            Math.cos(rayAngle)*this.rayLength
+        };
+
+        this.rays.push([start, end]);
+        }
     }
 
     #getReading(ray, borders, traffic){
@@ -61,31 +137,13 @@ class Sensor{
         }
     }
 
-    #castRays(){
-        this.rays = [];
-        for(let i = 0; i < this.rayCount; i++){
-            const rayAngle = lerp(
-                this.raySpread/2,
-                -this.raySpread/2,
-                this.rayCount== 1 ? 0.5 : (i)/((this.rayCount-1))
-            )+ this.car.angle;
-            
-        const start = {x: this.car.x, y: this.car.y};
-        const end = {
-            x: this.car.x -
-            Math.sin(rayAngle)*this.rayLength,
-            y: this.car.y-
-            Math.cos(rayAngle)*this.rayLength
-        };
-
-        this.rays.push([start, end]);
-        }  
-    }
 
 
     draw(ctx){
-        for(let i = 0; i < this.rayCount; i++ ){
+        
+        for(let i = 0; i < this.rayCount ; i++ ){
             let end = this.rays[i][1];
+
             if(this.readings[i]){
                 end = this.readings[i];
             }

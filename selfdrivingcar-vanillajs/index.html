@@ -7,11 +7,34 @@
     <body>
         <canvas id="carCanvas"></canvas>
         <div id="verticalButtons">
-            <button onclick="play()">💾</button>
+            <button onclick="play()">▶️</button>
+            <button onclick="stopSimulation()">🛑</button>
             <button onclick="save()">💾</button>
             <button onclick="discard()">🗑️</button>
+
         </div>
         <canvas id="networkCanvas"></canvas>
+        <div id="sidebar">
+            <div>
+                <p>highscore</p>
+                <H1 id="highscore"></H1>
+            </div>
+           
+            <div>
+                <p>highscore of this round</p>
+                <H1 id="bestCarScore"></H1>
+            </div>
+            <div>
+                <p>follow car score</p>
+                <H2 id="followCarScore"></H2>
+            </div>
+            <div>
+                <p> fps</p>
+                <p id="fps"></p>
+            </div>
+
+           
+        </div>
        
         <script src="utils.js"></script>
         <script src="sensor.js"></script>
@@ -26,7 +49,7 @@
         <script src="traffic.js"></script>
        
         <script src="visualizer.js"></script>
-       
+        <script src="simulator.js"></script>
         <script src="main.js"></script>
     </body>
 </html>
